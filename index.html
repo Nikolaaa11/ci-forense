@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CI forense</title>
+<meta name="description" content="Qué significa cada cifra del coeficiente intelectual: la escala, los tramos, los índices de un informe Wechsler, el intervalo de confianza y los mitos.">
+<meta name="theme-color" content="#ffffff">
+<meta name="color-scheme" content="light">
+<style>
+:root{
+  --bg:#ffffff; --bg2:#f5f5f7; --ink:#1d1d1f; --ink2:#6e6e73; --line:#d2d2d7;
+  --accent:#0071e3; --accent-soft:#e8f1fc;
+  --r:22px;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Inter","Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.47;letter-spacing:-.022em;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:980px;margin:0 auto;padding:0 22px}
+.narrow{max-width:692px;margin:0 auto}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.8);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid rgba(0,0,0,.08)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:48px;gap:16px}
+nav .brand{font-weight:600;font-size:19px;letter-spacing:-.02em;color:var(--ink)}
+nav ul{display:flex;gap:22px;list-style:none;font-size:13px;overflow-x:auto;scrollbar-width:none}
+nav ul::-webkit-scrollbar{display:none}
+nav ul a{color:var(--ink);opacity:.8;white-space:nowrap}
+nav ul a:hover{opacity:1;text-decoration:none}
+@media (max-width:640px){nav ul{display:none}}
+
+/* hero */
+.hero{text-align:center;padding-top:96px;padding-bottom:40px}
+.eyebrow{font-size:17px;font-weight:600;color:var(--accent);margin-bottom:10px;letter-spacing:-.01em}
+h1{font-size:clamp(44px,9vw,96px);line-height:1.02;font-weight:700;letter-spacing:-.045em}
+.hero p.lead{font-size:clamp(19px,2.6vw,26px);line-height:1.3;color:var(--ink2);max-width:720px;margin:22px auto 0;letter-spacing:-.02em}
+.big100{font-size:clamp(120px,30vw,300px);font-weight:700;letter-spacing:-.07em;line-height:.9;margin-top:48px;
+  background:linear-gradient(180deg,#1d1d1f 30%,#86868b 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .sub{color:var(--ink2);font-size:15px;margin-top:10px}
+
+section{padding:96px 0}
+section.alt{background:var(--bg2)}
+h2{font-size:clamp(34px,5.6vw,56px);line-height:1.07;font-weight:700;letter-spacing:-.035em;margin-bottom:18px}
+h3{font-size:22px;font-weight:600;letter-spacing:-.02em;margin-bottom:6px}
+.kicker{font-size:15px;font-weight:600;color:var(--ink2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+p+p{margin-top:14px}
+.muted{color:var(--ink2)}
+.center{text-align:center}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+
+/* formula */
+.formula{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:40px}
+.card{background:#fff;border-radius:var(--r);padding:30px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 30px rgba(0,0,0,.06)}
+section.alt .card{background:#fff}
+section:not(.alt) .card{background:var(--bg2);box-shadow:none}
+.card .eq{font-size:clamp(22px,3vw,30px);font-weight:600;letter-spacing:-.02em;margin:14px 0;font-variant-numeric:tabular-nums}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:4px 10px;border-radius:99px;background:var(--accent-soft);color:var(--accent)}
+.tag.old{background:#f0f0f2;color:var(--ink2)}
+@media (max-width:720px){.formula{grid-template-columns:1fr}}
+
+/* curve */
+.curve-box{margin-top:44px}
+#curve{width:100%;height:auto;display:block;overflow:visible}
+#curve text{font-family:var(--font);letter-spacing:-.01em}
+.legend{display:flex;flex-wrap:wrap;gap:10px 18px;justify-content:center;margin-top:18px;font-size:13px;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+
+/* calculator */
+.calc{display:grid;grid-template-columns:1.1fr 1fr;gap:28px;margin-top:40px;align-items:stretch}
+.calc .input-card{display:flex;flex-direction:column;justify-content:center}
+.calc label{font-size:15px;color:var(--ink2)}
+.iqnum{display:flex;align-items:baseline;gap:10px;margin:6px 0 16px}
+.iqnum input{font:inherit;font-size:clamp(64px,12vw,104px);font-weight:700;letter-spacing:-.05em;width:3.2ch;border:none;background:transparent;color:var(--ink);font-variant-numeric:tabular-nums;padding:0;outline:none;border-bottom:2px solid var(--line)}
+.iqnum input:focus{border-color:var(--accent)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:9px;background:linear-gradient(90deg,var(--accent) var(--p,50%),var(--line) var(--p,50%));outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:#fff;border:none;box-shadow:0 1px 4px rgba(0,0,0,.3);cursor:pointer}
+.out{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.stat{background:var(--bg2);border-radius:16px;padding:18px}
+section.alt .stat{background:#fff}
+.stat .v{font-size:30px;font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1.1}
+.stat .k{font-size:13px;color:var(--ink2);margin-top:4px}
+.stat.wide{grid-column:1/-1}
+.stat .v.lab{font-size:24px}
+.note{font-size:13px;color:var(--ink2);margin-top:14px}
+@media (max-width:760px){.calc{grid-template-columns:1fr}}
+
+/* bands */
+.bands{margin-top:44px;display:flex;flex-direction:column;gap:2px;border-radius:var(--r);overflow:hidden}
+.band{display:grid;grid-template-columns:120px 1fr 160px;gap:22px;align-items:center;padding:26px 28px;background:#fff;cursor:default;transition:background .3s}
+.band:hover{background:#fbfbfd}
+.band .n{font-size:44px;font-weight:700;letter-spacing:-.04em;font-variant-numeric:tabular-nums;line-height:1}
+.band .n small{display:block;font-size:12px;font-weight:600;color:var(--ink2);letter-spacing:0;margin-top:6px}
+.band .t h3{margin-bottom:4px}
+.band .t p{font-size:15px;color:var(--ink2)}
+.band .pc{text-align:right}
+.band .pc b{display:block;font-size:22px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.band .pc span{font-size:13px;color:var(--ink2)}
+.bar{height:5px;border-radius:9px;background:var(--line);margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width 1.4s cubic-bezier(.2,.7,.2,1)}
+@media (max-width:720px){.band{grid-template-columns:1fr;gap:10px;padding:22px}.band .pc{text-align:left}}
+
+/* report */
+.report{margin-top:40px;background:#fff;border-radius:var(--r);overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 30px rgba(0,0,0,.06)}
+.report-head{padding:22px 26px;border-bottom:1px solid #ececee;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:14px;color:var(--ink2)}
+.report-head b{color:var(--ink)}
+.rtable{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.rtable th{font-size:12px;font-weight:600;color:var(--ink2);text-align:left;padding:12px 16px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid #ececee}
+.rtable td{padding:15px 16px;border-bottom:1px solid #f2f2f4;font-size:16px}
+.rtable tr:last-child td{border-bottom:none}
+.rtable td.num{font-weight:600}
+.rtable td button{all:unset;cursor:pointer;color:var(--accent);font-weight:600;border-bottom:1px dashed currentColor}
+.rtable td button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
+.rtable tr.total td{background:#fbfbfd;font-weight:700}
+.rtable-wrap{overflow-x:auto}
+.explain{margin-top:22px;padding:24px 26px;border-radius:var(--r);background:var(--accent-soft);min-height:118px;transition:opacity .25s}
+.explain .x-t{font-weight:600;color:var(--accent);font-size:14px;margin-bottom:6px}
+.explain p{font-size:16px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.chip{all:unset;cursor:pointer;font-size:14px;padding:8px 14px;border-radius:99px;background:#fff;border:1px solid var(--line);color:var(--ink)}
+.chip[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* subtests */
+.scaled{display:grid;grid-template-columns:repeat(19,1fr);gap:4px;margin-top:30px;align-items:end;height:150px}
+.scaled div{background:var(--line);border-radius:5px 5px 2px 2px;position:relative}
+.scaled div.mid{background:var(--accent)}
+.scaled div.near{background:#7fb3ef}
+.scaled-x{display:grid;grid-template-columns:repeat(19,1fr);gap:4px;font-size:11px;color:var(--ink2);text-align:center;margin-top:6px;font-variant-numeric:tabular-nums}
+
+/* error */
+.err{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}
+.err .card .num{font-size:52px;font-weight:700;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.err .card p{font-size:15px;color:var(--ink2);margin-top:10px}
+@media (max-width:760px){.err{grid-template-columns:1fr}}
+
+/* myths */
+.myths{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:40px}
+.myth .q{font-size:13px;font-weight:600;color:#bf4800;text-transform:uppercase;letter-spacing:.06em}
+.myth h3{margin:8px 0 10px;font-size:24px}
+.myth p{font-size:16px;color:var(--ink2)}
+@media (max-width:720px){.myths{grid-template-columns:1fr}}
+
+/* sources */
+.sources{font-size:14px;color:var(--ink2);columns:2;column-gap:40px;margin-top:24px}
+.sources li{margin-bottom:10px;break-inside:avoid;list-style:none}
+@media (max-width:720px){.sources{columns:1}}
+footer{padding:40px 0 60px;font-size:12px;color:var(--ink2);border-top:1px solid #e8e8ed;background:var(--bg2)}
+footer p+p{margin-top:8px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top">CI forense</a>
+    <ul>
+      <li><a href="#origen">El número</a></li>
+      <li><a href="#calculadora">Calculadora</a></li>
+      <li><a href="#tramos">Cada cifra</a></li>
+      <li><a href="#informe">El informe</a></li>
+      <li><a href="#error">Margen de error</a></li>
+      <li><a href="#mitos">Mitos</a></li>
+      <li><a href="#fuentes">Fuentes</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero wrap" id="top">
+  <div class="eyebrow rv">Investigación del coeficiente intelectual</div>
+  <h1 class="rv">Qué significa<br>cada cifra.</h1>
+  <p class="lead rv">Un CI no es una nota, sino una posición: dice qué tan lejos estás del promedio de personas de tu edad. Abrimos el número, el informe y el margen de error.</p>
+  <div class="big100 rv" aria-hidden="true">100</div>
+  <p class="sub rv">El promedio. Por definición, siempre.</p>
+</header>
+
+<!-- ORIGEN -->
+<section class="alt" id="origen">
+  <div class="wrap">
+    <div class="narrow">
+      <div class="kicker rv">01 · De dónde sale el número</div>
+      <h2 class="rv">El CI ya no es un cociente.</h2>
+      <p class="rv">El nombre viene de 1912. William Stern propuso dividir la edad mental por la edad real, y Lewis Terman multiplicó el resultado por 100. Si a los 10 años un niño resolvía lo que resuelve el promedio a los 12, tenía 120.</p>
+      <p class="rv">La fórmula fallaba en los adultos, porque la «edad mental» deja de subir cerca de los 16 años. Con ella, un adulto de 40 años parecería tener la mitad de CI que a los 20. En 1939 David Wechsler la cambió por el <b>CI de desviación</b>, que usan hasta hoy todos los tests serios.</p>
+    </div>
+    <div class="formula">
+      <div class="card rv">
+        <span class="tag old">1912 · abandonado</span>
+        <div class="eq">CI = edad mental ÷ edad real × 100</div>
+        <p class="muted">Solo sirve con niños. Por eso «cociente».</p>
+      </div>
+      <div class="card rv">
+        <span class="tag">1939 · vigente</span>
+        <div class="eq">CI = 100 + 15 × z</div>
+        <p class="muted"><b>z</b> indica a cuántas desviaciones estándar del promedio de tu grupo de edad estás. La media vale 100 y cada desviación vale 15 puntos.</p>
+      </div>
+    </div>
+    <div class="curve-box rv">
+      <svg id="curve" viewBox="0 0 900 340" role="img" aria-label="Curva normal del CI con media 100 y desviación estándar 15, con los porcentajes de población en cada tramo"></svg>
+      <div class="legend" id="legend"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULADORA -->
+<section id="calculadora">
+  <div class="wrap">
+    <div class="narrow center">
+      <div class="kicker rv">02 · Pruébalo</div>
+      <h2 class="rv">Escribe un CI y mira qué dice.</h2>
+      <p class="muted rv">Se calcula con la curva normal (media 100, DE 15) y con la confiabilidad típica del CI total de una escala Wechsler (0,98).</p>
+    </div>
+    <div class="calc">
+      <div class="card input-card rv">
+        <label for="iq">Puntaje de CI total</label>
+        <div class="iqnum"><input id="iq" type="number" inputmode="numeric" min="40" max="160" value="115" aria-describedby="rangeHint"></div>
+        <input id="iqr" type="range" min="40" max="160" value="115" aria-label="Deslizar puntaje de CI">
+        <p class="note" id="rangeHint">Las escalas Wechsler para adultos reportan entre 40 y 160.</p>
+      </div>
+      <div class="out rv" aria-live="polite">
+        <div class="stat"><div class="v" id="oPct">84</div><div class="k">Percentil: supera a este % de su grupo de edad</div></div>
+        <div class="stat"><div class="v" id="oRare">1 de 6</div><div class="k" id="oRareK">personas está en este puntaje o más arriba</div></div>
+        <div class="stat"><div class="v" id="oZ">+1,00</div><div class="k">Desviaciones estándar (z)</div></div>
+        <div class="stat"><div class="v" id="oCI">111–119</div><div class="k">Intervalo de confianza al 95 %</div></div>
+        <div class="stat wide"><div class="v lab" id="oLab">Por sobre el promedio</div><div class="k" id="oLabK">Etiqueta descriptiva (WISC-V / WAIS-5)</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRAMOS -->
+<section class="alt" id="tramos">
+  <div class="wrap">
+    <div class="narrow">
+      <div class="kicker rv">03 · Cifra por cifra</div>
+      <h2 class="rv">Cada 15 puntos cambia el mapa.</h2>
+      <p class="rv">Los cortes de 15 en 15 no son arbitrarios: cada uno es una desviación estándar. Estas son las cifras que aparecen en los informes y lo que significa cada una.</p>
+    </div>
+    <div class="bands" id="bands"></div>
+    <p class="note rv">Percentil = porcentaje de personas de la misma edad con un puntaje más bajo. Calculado con la distribución normal teórica; en los extremos (bajo 55 y sobre 145) la curva real y las normas son menos precisas.</p>
+  </div>
+</section>
+
+<!-- INFORME -->
+<section id="informe">
+  <div class="wrap">
+    <div class="narrow">
+      <div class="kicker rv">04 · El informe por dentro</div>
+      <h2 class="rv">Un informe tiene muchas más cifras que el CI.</h2>
+      <p class="rv">Este es un informe de ejemplo, ficticio, con la estructura de la WAIS-5 (2024): cinco índices principales que juntos forman el CI total. Toca cualquier cifra en azul para ver qué significa.</p>
+    </div>
+    <div class="report rv">
+      <div class="report-head"><span><b>Informe de ejemplo</b> · 34 años · ficticio</span><span>Escala Wechsler de Inteligencia para Adultos, 5.ª ed.</span></div>
+      <div class="rtable-wrap">
+      <table class="rtable">
+        <thead><tr><th>Índice</th><th>Puntaje</th><th>Percentil</th><th>IC 95 %</th><th>Descripción</th></tr></thead>
+        <tbody id="rbody"></tbody>
+      </table>
+      </div>
+    </div>
+    <div class="explain rv" id="explain" aria-live="polite">
+      <div class="x-t">Toca una cifra</div>
+      <p>Cada fila tiene cuatro números. El puntaje usa la misma escala del CI (media 100, DE 15). El percentil lo traduce a «supera al X % de su edad». El intervalo dice entre qué valores está, con 95 % de seguridad, el puntaje verdadero.</p>
+    </div>
+
+    <div class="narrow" style="margin-top:72px">
+      <h3 class="rv" style="font-size:28px">Las pruebas: otra escala, de 1 a 19.</h3>
+      <p class="rv">Cada índice se arma con dos o más pruebas, como Matrices, Cubos, Dígitos o Vocabulario. Esas no usan la escala de 100, sino <b>puntuaciones escalares</b>: media 10 y desviación estándar 3. Un 7 equivale a un índice de 85 y un 13, a uno de 115.</p>
+    </div>
+    <div class="rv">
+      <div class="scaled" id="scaled" aria-hidden="true"></div>
+      <div class="scaled-x" id="scaledx" aria-hidden="true"></div>
+      <p class="note center">Distribución de las puntuaciones escalares. En azul, el tramo promedio (8 a 12).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ERROR -->
+<section class="alt" id="error">
+  <div class="wrap">
+    <div class="narrow">
+      <div class="kicker rv">05 · El margen de error</div>
+      <h2 class="rv">Un CI de 128 y uno de 131 pueden ser el mismo.</h2>
+      <p class="rv">Ningún test mide perfecto. Por eso un informe serio nunca da solo el número y siempre lo acompaña de un rango. Hay tres cifras que explican por qué.</p>
+    </div>
+    <div class="err">
+      <div class="card rv"><div class="num">0,98</div><h3 style="margin-top:12px">Confiabilidad</h3><p>La consistencia del CI total en la WAIS-IV es de 0,97 a 0,98. Los índices bajan a 0,87–0,98 y las pruebas sueltas, a 0,71–0,96. Mientras menos preguntas, más ruido.</p></div>
+      <div class="card rv"><div class="num">±2,1</div><h3 style="margin-top:12px">Error típico</h3><p>Sale de 15 × √(1 − 0,98). Al 95 % se multiplica por 1,96, y por eso el rango del CI total queda cerca de ±4 puntos, y más ancho en los índices.</p></div>
+      <div class="card rv"><div class="num">~3</div><h3 style="margin-top:12px">Efecto Flynn</h3><p>Puntos por década que subieron los puntajes durante el siglo XX. Con normas viejas el CI sale inflado, y por eso los tests se vuelven a normar cada 10 a 15 años.</p></div>
+    </div>
+    <div class="narrow" style="margin-top:44px">
+      <p class="rv">El rango casi nunca queda centrado. En un informe real de la WAIS-IV, un CI de 139 aparece con un intervalo de <b>134–142</b>: el punto medio queda más cerca de 100. Es la <b>regresión a la media</b>: un puntaje extremo tiene algo de suerte a favor, y en una segunda evaluación lo más probable es que salga un poco más cerca del promedio. La calculadora de arriba hace el mismo ajuste.</p>
+      <p class="rv">Otra cosa que pesa es con qué normas se comparó. Un test con baremos de otro país o de otra década no da el mismo número. En Chile se usan adaptaciones locales de las escalas Wechsler; un CI sacado con normas de Estados Unidos no es directamente comparable.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MITOS -->
+<section id="mitos">
+  <div class="wrap">
+    <div class="narrow">
+      <div class="kicker rv">06 · Lo que no dice</div>
+      <h2 class="rv">Cuatro cifras que circulan y no resisten el análisis.</h2>
+    </div>
+    <div class="myths">
+      <div class="card myth rv"><div class="q">Mito</div><h3>«Einstein tenía 160.»</h3><p>Einstein nunca dio un test de CI. El 160 es una estimación a posteriori que se repite sin fuente, y además coincide con el techo de la escala adulta: no se puede «medir» más arriba con una WAIS estándar.</p></div>
+      <div class="card myth rv"><div class="q">Mito</div><h3>«Un test online te da tu CI.»</h3><p>Un CI necesita normas: miles de personas evaluadas por edad, con condiciones controladas y una aplicación estandarizada. Un test de internet no tiene nada de eso, así que su número no es un CI aunque use la escala de 100.</p></div>
+      <div class="card myth rv"><div class="q">Mito</div><h3>«El CI es fijo para siempre.»</h3><p>En adultos es bastante estable, pero no inmóvil. En niños puede moverse 10 puntos o más entre evaluaciones. La escolaridad, la salud, el idioma, el cansancio y la ansiedad el día del test influyen en el resultado.</p></div>
+      <div class="card myth rv"><div class="q">Mito</div><h3>«Bajo 70 es discapacidad intelectual.»</h3><p>El DSM-5-TR dejó de definirla por un número. Exige además dificultades en el funcionamiento adaptativo (vida diaria, social, conceptual) que empezaron en el desarrollo. El CI orienta (cerca de dos desviaciones bajo la media, contando el error de medida), pero no decide solo.</p></div>
+    </div>
+    <div class="narrow" style="margin-top:48px">
+      <p class="rv">Y lo más importante: el CI resume bien ciertas capacidades de razonamiento, y por eso predice rendimiento escolar y laboral mejor que casi cualquier otro test. Pero no mide creatividad, juicio práctico, conocimiento de un oficio, carácter ni valor como persona. Para eso es más útil mirar el perfil de los índices que el número total.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FUENTES -->
+<section class="alt" id="fuentes">
+  <div class="wrap">
+    <div class="kicker">Fuentes y método</div>
+    <h2 style="font-size:34px">De dónde salen las cifras.</h2>
+    <p class="muted">Percentiles, rarezas y valores z se calculan en esta página con la distribución normal. El intervalo de confianza usa la puntuación verdadera estimada (100 + r·(CI − 100)) ± 1,96 × 15 × √(r(1 − r)), con r = 0,98, el método de los manuales Wechsler.</p>
+    <ul class="sources">
+      <li><a href="https://www.pearsonassessments.com/content/dam/school/global/clinical/us/assets/wais-5/wais-5-overview-brochure.pdf" target="_blank" rel="noopener">Pearson · WAIS-5 overview brochure</a> — índices y pruebas de la WAIS-5.</li>
+      <li><a href="https://pearsonassessments.com/content/dam/school/global/clinical/us/assets/wais-5/wais-5-sample-score-report.pdf" target="_blank" rel="noopener">Pearson · WAIS-5 sample score report</a> — formato del informe y etiquetas descriptivas.</li>
+      <li><a href="https://www.pearsonclinical.asia/content/dam/school/global/clinical/us/assets/wais-iv/wais-iv-score-report.pdf" target="_blank" rel="noopener">Pearson · WAIS-IV score report</a> — ejemplo con CI 139 e IC 134–142.</li>
+      <li><a href="https://www.ux1.eiu.edu/~glcanivez/Adobe%20pdf/Publications-Papers/Canivez%20(2010)%20Buros%20MMY%20WAIS-IV%20Review.pdf" target="_blank" rel="noopener">Canivez (2010) · reseña WAIS-IV, Buros MMY</a> — confiabilidades .97–.98 (CI total), .87–.98 (índices), .71–.96 (pruebas).</li>
+      <li><a href="https://core.ac.uk/download/56495.pdf" target="_blank" rel="noopener">Error de medida en las escalas Wechsler (core.ac.uk)</a> — EEM = DE × √(1 − r).</li>
+      <li>Flynn, J. R. (1987). «Massive IQ gains in 14 nations». <i>Psychological Bulletin</i>, 101(2).</li>
+      <li>American Psychiatric Association (2022). <i>DSM-5-TR</i>, criterios de discapacidad intelectual.</li>
+      <li>Wechsler, D. (1939). <i>The Measurement of Adult Intelligence</i>; Stern, W. (1912).</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Divulgación, no diagnóstico. Un CI solo lo determina una evaluación aplicada por un psicólogo o psicóloga con un test normado.</p>
+    <p>El informe de la sección 04 es ficticio. Revisado el 16 de noviembre de 2026.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  // ---- math ----
+  function erf(x){ // Abramowitz-Stegun 7.1.26, |err|<1.5e-7
+    var s=x<0?-1:1; x=Math.abs(x);
+    var t=1/(1+0.3275911*x);
+    var y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);
+    return s*y;
+  }
+  function cdf(iq){return 0.5*(1+erf((iq-100)/15/Math.SQRT2));}
+  function pdf(iq){var z=(iq-100)/15;return Math.exp(-z*z/2);}
+  var R=0.98, SEE=15*Math.sqrt(R*(1-R));
+  function ci95(iq){var t=100+R*(iq-100);return [Math.round(t-1.96*SEE),Math.round(t+1.96*SEE)];}
+  function fmtPct(p){
+    var v=p*100;
+    if(v>=99.9) return v.toFixed(v>=99.99?3:2).replace(".",",");
+    if(v<0.1) return v.toFixed(v<0.01?3:2).replace(".",",");
+    if(v<1||v>99) return v.toFixed(1).replace(".",",");
+    return Math.round(v).toString();
+  }
+  function nf(n){return n.toLocaleString("es-CL");}
+  function label(iq){
+    if(iq>=130) return "Extremadamente alto";
+    if(iq>=120) return "Muy alto";
+    if(iq>=110) return "Por sobre el promedio";
+    if(iq>=90) return "Promedio";
+    if(iq>=80) return "Bajo el promedio";
+    if(iq>=70) return "Muy bajo";
+    return "Extremadamente bajo";
+  }
+
+  // ---- curve ----
+  var svg=document.getElementById("curve"), NS="http://www.w3.org/2000/svg";
+  var W=900,H=340,top=20,base=280,left=20,right=880;
+  function X(iq){return left+(iq-40)/120*(right-left);}
+  function Y(iq){return base-pdf(iq)*(base-top-20);}
+  function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);return e;}
+  var segs=[[40,55,"#eef0f3"],[55,70,"#dde3ea"],[70,85,"#bcd4f0"],[85,115,"#0071e3"],[115,130,"#bcd4f0"],[130,145,"#dde3ea"],[145,160,"#eef0f3"]];
+  segs.forEach(function(s){
+    var d="M"+X(s[0])+","+base;
+    for(var i=s[0];i<=s[1];i+=0.5) d+=" L"+X(i).toFixed(1)+","+Y(i).toFixed(1);
+    d+=" L"+X(s[1])+","+base+" Z";
+    svg.appendChild(el("path",{d:d,fill:s[2]}));
+  });
+  var line="M"+X(40)+","+Y(40);
+  for(var i=40;i<=160;i+=0.5) line+=" L"+X(i).toFixed(1)+","+Y(i).toFixed(1);
+  var curve=el("path",{d:line,fill:"none",stroke:"#1d1d1f","stroke-width":"2.2","stroke-linecap":"round"});
+  svg.appendChild(curve);
+  svg.appendChild(el("line",{x1:left,y1:base,x2:right,y2:base,stroke:"#d2d2d7","stroke-width":"1"}));
+  [[47.5,"0,1 %"],[62.5,"2,1 %"],[77.5,"13,6 %"],[92.5,"34,1 %"],[107.5,"34,1 %"],[122.5,"13,6 %"],[137.5,"2,1 %"],[152.5,"0,1 %"]].forEach(function(p){
+    var inBlue=p[0]>85&&p[0]<115;
+    var t=el("text",{x:X(p[0]),y:inBlue?Y(p[0])+46:Math.min(Y(p[0])-10,base-12),"text-anchor":"middle","font-size":inBlue?"17":"13","font-weight":"600",fill:inBlue?"#fff":"#6e6e73"});
+    t.textContent=p[1];svg.appendChild(t);
+  });
+  [40,55,70,85,100,115,130,145,160].forEach(function(v){
+    svg.appendChild(el("line",{x1:X(v),y1:base,x2:X(v),y2:base+6,stroke:"#86868b"}));
+    var t=el("text",{x:X(v),y:base+26,"text-anchor":"middle","font-size":"15","font-weight":v===100?"700":"500",fill:"#1d1d1f"});
+    t.textContent=v;svg.appendChild(t);
+    var z=el("text",{x:X(v),y:base+46,"text-anchor":"middle","font-size":"11",fill:"#86868b"});
+    var zz=(v-100)/15; z.textContent=(zz>0?"+":zz<0?"−":"")+Math.abs(zz)+" DE";svg.appendChild(z);
+  });
+  var marker=el("g",{});
+  var mLine=el("line",{y1:top,y2:base,stroke:"#ff3b30","stroke-width":"2","stroke-dasharray":"4 4"});
+  var mDot=el("circle",{r:"6",fill:"#ff3b30",stroke:"#fff","stroke-width":"2"});
+  marker.appendChild(mLine);marker.appendChild(mDot);svg.appendChild(marker);
+  svg.setAttribute("viewBox","0 0 "+W+" "+(H+10));
+  document.getElementById("legend").innerHTML='<span><i style="background:#0071e3"></i>Promedio amplio, 85–115: 68 % de la gente</span><span><i style="background:#bcd4f0"></i>Entre 1 y 2 DE: 27 %</span><span><i style="background:#dde3ea"></i>Entre 2 y 3 DE: 4 %</span><span><i style="background:#ff3b30"></i>Tu cifra de la calculadora</span>';
+  // draw-in animation
+  var reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(!reduce&&curve.getTotalLength){
+    var L=curve.getTotalLength();curve.style.strokeDasharray=L;curve.style.strokeDashoffset=L;
+    var io0=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){curve.style.transition="stroke-dashoffset 2s cubic-bezier(.3,.6,.2,1)";curve.style.strokeDashoffset=0;io0.disconnect();}});},{threshold:.3});
+    io0.observe(svg);
+  }
+
+  // ---- calculator ----
+  var inp=document.getElementById("iq"), rng=document.getElementById("iqr");
+  function upd(v,src){
+    v=Math.round(Number(v)); if(isNaN(v)) return;
+    var c=Math.max(40,Math.min(160,v));
+    if(src!=="num") inp.value=c;
+    if(src!=="rng") rng.value=c;
+    rng.style.setProperty("--p",((c-40)/120*100)+"%");
+    var p=cdf(c), z=(c-100)/15, ci=ci95(c);
+    document.getElementById("oPct").textContent=fmtPct(p);
+    var above=1-cdf(c-0.5), below=cdf(c+0.5), rareEl=document.getElementById("oRare"), rk=document.getElementById("oRareK");
+    if(c>=100){rareEl.textContent="1 de "+nf(Math.max(1,Math.round(1/above)));rk.textContent="personas tiene este puntaje o uno más alto";}
+    else{rareEl.textContent="1 de "+nf(Math.max(1,Math.round(1/below)));rk.textContent="personas tiene este puntaje o uno más bajo";}
+    document.getElementById("oZ").textContent=(z>0?"+":z<0?"−":"")+Math.abs(z).toFixed(2).replace(".",",");
+    document.getElementById("oCI").textContent=Math.max(40,ci[0])+"–"+Math.min(160,ci[1]);
+    document.getElementById("oLab").textContent=label(c);
+    mLine.setAttribute("x1",X(c));mLine.setAttribute("x2",X(c));
+    mDot.setAttribute("cx",X(c));mDot.setAttribute("cy",Y(c));
+  }
+  inp.addEventListener("input",function(){if(inp.value!=="")upd(inp.value,"num");});
+  inp.addEventListener("blur",function(){upd(inp.value||100);});
+  rng.addEventListener("input",function(){upd(rng.value,"rng");});
+  upd(115);
+
+  // ---- bands ----
+  var B=[
+    [160,"Techo de la escala","El máximo que reporta una WAIS. Más arriba no hay normas confiables: cualquier «CI 180» sale de otra escala o de una extrapolación."],
+    [145,"+3 DE · extremadamente alto","1 de cada 741 personas llega aquí o más arriba. En un estadio de 45.000 personas habría unas 60."],
+    [130,"+2 DE · extremadamente alto","El corte que usan muchos programas de talento y Mensa (percentil 98). Cerca de 1 de cada 44."],
+    [115,"+1 DE · por sobre el promedio","Supera a 84 de cada 100. Es frecuente en carreras universitarias exigentes; no es excepcional."],
+    [100,"La media","Exactamente la mitad de la población de tu edad queda debajo. El test se calibra para que salga así."],
+    [85,"−1 DE · bajo el promedio","Percentil 16. Entre 85 y 115 está el 68 % de la gente: el rango normal amplio. La mayoría vive y trabaja sin ninguna dificultad notoria."],
+    [70,"−2 DE · muy bajo","Percentil 2. Zona donde se evalúa discapacidad intelectual, siempre junto con el funcionamiento adaptativo y el error de medida (±5)."],
+    [55,"−3 DE · extremadamente bajo","1 de cada 741. Suele ir con necesidades de apoyo importantes en la vida diaria."],
+    [40,"Piso de la escala","El mínimo reportable en la WAIS. Más abajo se usan otras herramientas, centradas en conducta adaptativa."]
+  ];
+  var bh="";
+  B.forEach(function(b){
+    var p=cdf(b[0]);
+    bh+='<div class="band rv"><div class="n">'+b[0]+'<small>'+label(b[0])+'</small></div><div class="t"><h3>'+b[1]+'</h3><p>'+b[2]+'</p></div><div class="pc"><b>Percentil '+fmtPct(p)+'</b><span>'+(p>=.5?"1 de "+nf(Math.round(1/(1-p)))+" está igual o más arriba":"1 de "+nf(Math.round(1/p))+" está igual o más abajo")+'</span><div class="bar"><i data-w="'+(p*100).toFixed(2)+'"></i></div></div></div>';
+  });
+  document.getElementById("bands").innerHTML=bh;
+
+  // ---- report ----
+  var rows=[
+    ["Comprensión verbal","ICV",112,"Vocabulario, semejanzas y conocimiento general: entender y razonar con palabras. Depende bastante de la escolaridad y del idioma en que se rinde el test."],
+    ["Visoespacial","IVE",104,"Cubos y Rompecabezas visuales: armar, rotar y analizar formas en la mente. Es nuevo como índice propio desde la WISC-V y la WAIS-5."],
+    ["Razonamiento fluido","IRF",118,"Matrices y Balanzas: descubrir reglas en problemas nuevos sin usar conocimiento previo. Es lo más cercano a la «inteligencia pura» que tiene la escala."],
+    ["Memoria de trabajo","IMT",96,"Dígitos y Secuencias: mantener y manipular información unos segundos. Baja con la ansiedad, el sueño o el déficit atencional."],
+    ["Velocidad de procesamiento","IVP",88,"Claves y Búsqueda de símbolos: rapidez y precisión en tareas simples. Es el índice más sensible al cansancio, a la edad y a dificultades motoras."]
+  ];
+  var tb="";
+  rows.forEach(function(r,i){
+    var ci=ci95(r[2]); ci=[ci[0]-3,ci[1]+3];
+    tb+='<tr><td>'+r[0]+' <span class="muted">('+r[1]+')</span></td><td class="num"><button data-k="s'+i+'">'+r[2]+'</button></td><td><button data-k="p'+i+'">'+fmtPct(cdf(r[2]))+'</button></td><td><button data-k="c'+i+'">'+ci[0]+'–'+ci[1]+'</button></td><td><button data-k="d'+i+'">'+label(r[2])+'</button></td></tr>';
+  });
+  var fs=108, fci=ci95(fs);
+  tb+='<tr class="total"><td>CI total</td><td class="num"><button data-k="ft">'+fs+'</button></td><td><button data-k="fp">'+fmtPct(cdf(fs))+'</button></td><td><button data-k="fc">'+fci[0]+'–'+fci[1]+'</button></td><td><button data-k="fd">'+label(fs)+'</button></td></tr>';
+  document.getElementById("rbody").innerHTML=tb;
+  var ex=document.getElementById("explain");
+  function show(t,p){ex.innerHTML='<div class="x-t">'+t+'</div><p>'+p+'</p>';}
+  document.getElementById("rbody").addEventListener("click",function(e){
+    var b=e.target.closest("button"); if(!b) return;
+    var k=b.getAttribute("data-k"), type=k[0], i=+k.slice(1);
+    if(k[0]==="f"){
+      var m={t:["CI total: 108","Resume las capacidades medidas en un número, calculado con siete pruebas de los cinco índices. Ojo: en este perfil hay 30 puntos entre el índice más alto (118) y el más bajo (88). Con tanta dispersión, el CI total representa mal a la persona, y un buen informe pone el foco en el perfil."],
+             p:["Percentil "+fmtPct(cdf(fs)),"Supera a "+fmtPct(cdf(fs))+" de cada 100 personas de 34 años de la muestra normativa. No es un porcentaje de respuestas correctas."],
+             c:["Intervalo "+fci[0]+"–"+fci[1],"Con 95 % de confianza, el CI verdadero está en ese rango. Es asimétrico porque se centra en la puntuación verdadera estimada (100 + 0,98 × 8 = 107,8), que queda un poco más cerca de la media."],
+             d:["Etiqueta: "+label(fs),"Las etiquetas son convenciones para comunicar tramos de 10 puntos. 108 y 111 caen en tramos distintos, aunque su diferencia es menor que el margen de error."]};
+      var x=m[k[1]]; show(x[0],x[1]); return;
+    }
+    var r=rows[i], ci=ci95(r[2]);
+    if(type==="s") show(r[0]+": "+r[2],r[3]+" Se lee con la misma escala del CI: media 100 y desviación estándar 15.");
+    if(type==="p") show("Percentil "+fmtPct(cdf(r[2])),"En "+r[0].toLowerCase()+", rinde mejor que "+fmtPct(cdf(r[2]))+" de cada 100 personas de su edad.");
+    if(type==="c") show("Intervalo "+(ci[0]-3)+"–"+(ci[1]+3),"Los índices tienen menos preguntas que el CI total, así que su error es mayor y su rango más ancho (unos ±7 en vez de ±4).");
+    if(type==="d") show("Etiqueta: "+label(r[2]),"Tramos WISC-V/WAIS-5: 130+ extremadamente alto, 120–129 muy alto, 110–119 por sobre el promedio, 90–109 promedio, 80–89 bajo el promedio, 70–79 muy bajo, 69 o menos extremadamente bajo.");
+  });
+
+  // ---- scaled scores ----
+  var sc="",sx="";
+  for(var s=1;s<=19;s++){
+    var h=Math.exp(-Math.pow((s-10)/3,2)/2)*100;
+    sc+='<div class="'+(s>=8&&s<=12?"mid":(s===7||s===13?"near":""))+'" style="height:'+h.toFixed(1)+'%"></div>';
+    sx+='<span>'+s+'</span>';
+  }
+  document.getElementById("scaled").innerHTML=sc;
+  document.getElementById("scaledx").innerHTML=sx;
+
+  // ---- reveal ----
+  var rvs=document.querySelectorAll(".rv");
+  if(reduce||!("IntersectionObserver" in window)){
+    rvs.forEach(function(e){e.classList.add("in");});
+    document.querySelectorAll(".bar i").forEach(function(b){b.style.width=b.dataset.w+"%";});
+  } else {
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add("in");
+        var bi=e.target.querySelector(".bar i"); if(bi) bi.style.width=bi.dataset.w+"%";
+        io.unobserve(e.target);}
+    });},{threshold:.12,rootMargin:"0px 0px -40px 0px"});
+    rvs.forEach(function(e){io.observe(e);});
+    // la portada aparece sola, aunque el observador tarde
+    document.querySelectorAll(".hero .rv").forEach(function(e,i){setTimeout(function(){e.classList.add("in");},60+80*i);});
+  }
+})();
+</script>
+</body>
+</html>
