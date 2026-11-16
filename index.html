@@ -153,6 +153,45 @@ section.alt .stat{background:#fff}
 .sources{font-size:14px;color:var(--ink2);columns:2;column-gap:40px;margin-top:24px}
 .sources li{margin-bottom:10px;break-inside:avoid;list-style:none}
 @media (max-width:720px){.sources{columns:1}}
+/* tabs de resultados */
+.seg{display:flex;gap:4px;padding:4px;background:#e8e8ed;border-radius:14px;max-width:440px;margin:40px auto 0}
+.seg button{all:unset;flex:1;text-align:center;padding:10px 8px;border-radius:10px;font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;transition:background .25s,box-shadow .25s}
+.seg button[aria-selected=true]{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tpanel{margin-top:44px;animation:fadeup .6s cubic-bezier(.2,.7,.2,1)}
+.tpanel[hidden]{display:none}
+@keyframes fadeup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.tpanel{animation:none}}
+.res-top{display:grid;grid-template-columns:1fr 1.2fr;gap:28px;align-items:center}
+.res-num{font-size:clamp(110px,22vw,200px);font-weight:700;letter-spacing:-.06em;line-height:.9;font-variant-numeric:tabular-nums}
+.res-lab{font-size:24px;font-weight:600;letter-spacing:-.02em;margin-top:10px}
+.res-ci{color:var(--ink2);margin-top:4px}
+.mini{width:100%;height:auto;display:block}
+.mini text{font-family:var(--font)}
+.res-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:32px}
+section:not(.alt) .band{background:var(--bg2)}
+.res-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}
+.res-cols ul{list-style:none;margin-top:10px}
+.res-cols li{padding:12px 0;border-top:1px solid #e3e3e8;font-size:16px}
+.res-cols li:first-child{border-top:none}
+.res-cols .ok{color:var(--accent)}
+.res-cols .no{color:#bf4800}
+.dots-wrap{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;margin-top:20px}
+.dots{display:grid;grid-template-columns:repeat(10,14px);gap:7px}
+.dots i{width:14px;height:14px;border-radius:50%;background:#d2d2d7}
+.dots i.hi{background:var(--accent)}
+.dots i.me{background:var(--accent);box-shadow:0 0 0 3px #fff,0 0 0 5px var(--accent)}
+.next{margin-top:20px;background:var(--accent-soft);border-radius:var(--r);padding:26px}
+.next b{color:var(--accent)}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.cmp .card{text-align:center}
+.cmp .res-num{font-size:clamp(80px,14vw,130px)}
+.range{position:relative;height:90px;margin-top:30px}
+.range .axis{position:absolute;left:0;right:0;top:60px;height:1px;background:var(--line)}
+.range .iv{position:absolute;height:12px;border-radius:9px}
+.range .tick{position:absolute;top:66px;font-size:12px;color:var(--ink2);transform:translateX(-50%);font-variant-numeric:tabular-nums}
+.range .lbl{position:absolute;font-size:13px;font-weight:600;transform:translateX(-50%);white-space:nowrap}
+@media (max-width:760px){.res-top,.res-cols,.cmp{grid-template-columns:1fr}.res-stats{grid-template-columns:1fr 1fr}.dots-wrap{grid-template-columns:1fr}}
 footer{padding:40px 0 60px;font-size:12px;color:var(--ink2);border-top:1px solid #e8e8ed;background:var(--bg2)}
 footer p+p{margin-top:8px}
 </style>
@@ -165,6 +204,7 @@ footer p+p{margin-top:8px}
     <ul>
       <li><a href="#origen">El número</a></li>
       <li><a href="#calculadora">Calculadora</a></li>
+      <li><a href="#resultados">128 · 135</a></li>
       <li><a href="#tramos">Cada cifra</a></li>
       <li><a href="#informe">El informe</a></li>
       <li><a href="#error">Margen de error</a></li>
@@ -236,8 +276,27 @@ footer p+p{margin-top:8px}
   </div>
 </section>
 
+<!-- RESULTADOS -->
+<section class="alt" id="resultados">
+  <div class="wrap">
+    <div class="narrow center">
+      <div class="kicker rv">Dos resultados reales</div>
+      <h2 class="rv">128 y 135, cifra por cifra.</h2>
+      <p class="muted rv">Una pestaña para cada puntaje con qué significa, qué tan poco común es, cuánto margen de error tiene y qué no dice.</p>
+    </div>
+    <div class="seg rv" role="tablist" aria-label="Resultados">
+      <button role="tab" id="t-128" aria-controls="ci-128" aria-selected="true">CI 128</button>
+      <button role="tab" id="t-135" aria-controls="ci-135" aria-selected="false" tabindex="-1">CI 135</button>
+      <button role="tab" id="t-cmp" aria-controls="ci-comparar" aria-selected="false" tabindex="-1">Comparar</button>
+    </div>
+    <div class="tpanel" id="ci-128" role="tabpanel" aria-labelledby="t-128"></div>
+    <div class="tpanel" id="ci-135" role="tabpanel" aria-labelledby="t-135" hidden></div>
+    <div class="tpanel" id="ci-comparar" role="tabpanel" aria-labelledby="t-cmp" hidden></div>
+  </div>
+</section>
+
 <!-- TRAMOS -->
-<section class="alt" id="tramos">
+<section id="tramos">
   <div class="wrap">
     <div class="narrow">
       <div class="kicker rv">03 · Cifra por cifra</div>
@@ -250,7 +309,7 @@ footer p+p{margin-top:8px}
 </section>
 
 <!-- INFORME -->
-<section id="informe">
+<section class="alt" id="informe">
   <div class="wrap">
     <div class="narrow">
       <div class="kicker rv">04 · El informe por dentro</div>
@@ -284,7 +343,7 @@ footer p+p{margin-top:8px}
 </section>
 
 <!-- ERROR -->
-<section class="alt" id="error">
+<section id="error">
   <div class="wrap">
     <div class="narrow">
       <div class="kicker rv">05 · El margen de error</div>
@@ -304,7 +363,7 @@ footer p+p{margin-top:8px}
 </section>
 
 <!-- MITOS -->
-<section id="mitos">
+<section class="alt" id="mitos">
   <div class="wrap">
     <div class="narrow">
       <div class="kicker rv">06 · Lo que no dice</div>
@@ -323,7 +382,7 @@ footer p+p{margin-top:8px}
 </section>
 
 <!-- FUENTES -->
-<section class="alt" id="fuentes">
+<section id="fuentes">
   <div class="wrap">
     <div class="kicker">Fuentes y método</div>
     <h2 style="font-size:34px">De dónde salen las cifras.</h2>
@@ -511,6 +570,93 @@ footer p+p{margin-top:8px}
   }
   document.getElementById("scaled").innerHTML=sc;
   document.getElementById("scaledx").innerHTML=sx;
+
+  // ---- pestañas 128 / 135 ----
+  function info(c){
+    var up=1-cdf(c-0.5), ci=ci95(c);
+    return {pct:fmtPct(cdf(c)), oneIn:Math.round(1/up), up:up, z:((c-100)/15).toFixed(2).replace(".",","),
+      ci:ci, lab:label(c), chile:Math.round(up*20e6/10000)*10000, dots:Math.max(1,Math.round(up*100))};
+  }
+  function miniCurve(c){
+    var w=400,h=170,b=130,l=10,r=390;
+    function mx(v){return l+(v-55)/90*(r-l);}
+    function my(v){return b-pdf(v)*(b-14);}
+    var line="",area="M"+mx(c).toFixed(1)+","+b;
+    for(var v=55;v<=145;v+=0.5){line+=(v===55?"M":" L")+mx(v).toFixed(1)+","+my(v).toFixed(1);if(v>=c)area+=" L"+mx(v).toFixed(1)+","+my(v).toFixed(1);}
+    area+=" L"+mx(145)+","+b+" Z";
+    var t='<svg class="mini" viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Posición del '+c+' en la curva: la zona azul es la gente con '+c+' o más">';
+    t+='<path d="'+area+'" fill="#0071e3" opacity=".9"/>';
+    t+='<path d="'+line+'" fill="none" stroke="#1d1d1f" stroke-width="2"/>';
+    t+='<line x1="'+l+'" y1="'+b+'" x2="'+r+'" y2="'+b+'" stroke="#d2d2d7"/>';
+    t+='<line x1="'+mx(c)+'" y1="'+(my(c)-34)+'" x2="'+mx(c)+'" y2="'+b+'" stroke="#0071e3" stroke-width="2"/>';
+    t+='<text x="'+mx(c)+'" y="'+(my(c)-42)+'" text-anchor="middle" font-size="15" font-weight="700" fill="#0071e3">'+c+'</text>';
+    [70,85,100,115,130,145].forEach(function(v){t+='<text x="'+Math.min(mx(v),r-10)+'" y="'+(b+22)+'" text-anchor="middle" font-size="12" fill="#86868b">'+v+'</text>';});
+    return t+'</svg>';
+  }
+  function dots(n){var s="";for(var i=0;i<100;i++){s+='<i class="'+(i>=100-n?(i===100-n?"me":"hi"):"")+'"></i>';}return '<div class="dots" aria-hidden="true">'+s+'</div>';}
+  var CASES={
+    128:{
+      si:["Rinde mejor que unas 97 de cada 100 personas de su edad en el test.",
+          "Cae en el tramo «muy alto» (120–129), a solo dos puntos del corte de 130.",
+          "Con el margen de error, el CI verdadero está entre {ci0} y {ci1}. Es decir, en otra evaluación podría salir 130 o más.",
+          "En una sala de 30 personas elegidas al azar, lo esperable es que tenga el puntaje más alto."],
+      no:["No es un «casi» que valga menos: la distancia con 130 es más chica que el error de medida del test.",
+          "No dice dónde está la fortaleza. Un 128 puede salir de índices parejos o de un razonamiento fluido de 140 con una velocidad de 105. Eso solo se ve en el informe completo.",
+          "Con este test no alcanza el corte de Mensa (percentil 98), pero esa diferencia es estadística, no de capacidad."],
+      next:"<b>Siguiente paso:</b> pedir los cinco índices y sus intervalos. Con un 128 lo interesante está en el perfil: qué índice lo sube y cuál lo frena. Si el número salió de un test online, no es un CI."
+    },
+    135:{
+      si:["Rinde mejor que 99 de cada 100 personas de su edad en el test.",
+          "Cae en el tramo «extremadamente alto» (130 o más), a más de dos desviaciones estándar sobre la media.",
+          "Hasta el extremo bajo de su intervalo ({ci0}) queda en el corte de 130. Es un resultado sólido, no un golpe de suerte de un día.",
+          "Supera el corte de Mensa y de la mayoría de los programas de talento académico (percentil 98)."],
+      no:["No garantiza nada por sí solo. Pasado cierto nivel, la constancia, el contexto y las oportunidades pesan más que unos puntos extra de CI.",
+          "No implica un perfil parejo. En puntajes altos es común que haya 20 o 30 puntos entre el índice más fuerte y el más débil.",
+          "No equivale a un 135 de otra escala. Cattell usa desviación estándar 24, y su 135 corresponde a un 122 en Wechsler. Siempre hay que preguntar con qué test se sacó."],
+      next:"<b>Siguiente paso:</b> guardar el informe completo con el nombre del test, el año de las normas y el intervalo. Es lo que piden Mensa y los programas de talento para validar el puntaje."
+    }
+  };
+  function fill(t,d){return t.replace("{ci0}",d.ci[0]).replace("{ci1}",d.ci[1]);}
+  [128,135].forEach(function(c){
+    var d=info(c), k=CASES[c], h="";
+    h+='<div class="res-top"><div><div class="res-num">'+c+'</div><div class="res-lab">'+d.lab+'</div><div class="res-ci">Intervalo de confianza al 95 %: '+d.ci[0]+'–'+d.ci[1]+'</div></div><div class="card" style="padding:20px">'+miniCurve(c)+'</div></div>';
+    h+='<div class="res-stats">';
+    h+='<div class="stat"><div class="v">'+d.pct+'</div><div class="k">Percentil</div></div>';
+    h+='<div class="stat"><div class="v">1 de '+d.oneIn+'</div><div class="k">tiene '+c+' o más</div></div>';
+    h+='<div class="stat"><div class="v">+'+d.z+'</div><div class="k">Desviaciones estándar</div></div>';
+    h+='<div class="stat"><div class="v">~'+nf(d.chile/1000)+' mil</div><div class="k">personas en Chile con '+c+' o más (proporción aplicada a 20 millones)</div></div>';
+    h+='</div>';
+    h+='<div class="res-cols"><div class="card"><h3 class="ok">Qué significa</h3><ul>'+k.si.map(function(s){return "<li>"+fill(s,d)+"</li>";}).join("")+'</ul></div>';
+    h+='<div class="card"><h3 class="no">Qué no significa</h3><ul>'+k.no.map(function(s){return "<li>"+s+"</li>";}).join("")+'</ul></div></div>';
+    h+='<div class="card dots-wrap">'+dots(d.dots)+'<div><h3>De cada 100 personas</h3><p class="muted">'+(d.dots===1?"Solo 1 de cada 100 personas tiene "+c+" o más. Es el punto azul con borde.":"Unas "+d.dots+" de cada 100 personas tienen "+c+" o más: son los puntos azules, y el del borde marca el "+c+".")+' Las otras '+(100-d.dots)+' tienen menos.</p></div></div>';
+    h+='<div class="next">'+k.next+'</div>';
+    document.getElementById("ci-"+c).innerHTML=h;
+  });
+  (function(){
+    var a=info(128), b=info(135);
+    function pos(v){return ((v-115)/30*100).toFixed(2)+"%";}
+    var h='<div class="cmp"><div class="card"><div class="res-num">128</div><div class="res-lab">'+a.lab+'</div><div class="res-ci">Percentil '+a.pct+' · 1 de '+a.oneIn+'</div></div>';
+    h+='<div class="card"><div class="res-num">135</div><div class="res-lab">'+b.lab+'</div><div class="res-ci">Percentil '+b.pct+' · 1 de '+b.oneIn+'</div></div></div>';
+    h+='<div class="card" style="margin-top:20px"><h3>Los dos intervalos, uno sobre otro</h3><p class="muted">Cada barra es el rango donde está el CI verdadero con 95 % de confianza. Se tocan entre 130 y 132.</p><div class="range">';
+    h+='<div class="iv" style="left:'+pos(a.ci[0])+';width:calc('+pos(a.ci[1])+' - '+pos(a.ci[0])+');top:14px;background:#7fb3ef"></div><div class="lbl" style="left:'+pos(128)+';top:-6px">128</div>';
+    h+='<div class="iv" style="left:'+pos(b.ci[0])+';width:calc('+pos(b.ci[1])+' - '+pos(b.ci[0])+');top:38px;background:#0071e3"></div><div class="lbl" style="left:'+pos(135)+';top:-6px;color:#0071e3">135</div>';
+    h+='<div class="axis"></div>';
+    [115,120,125,130,135,140,145].forEach(function(v){h+='<div class="tick" style="left:'+pos(v)+'">'+v+'</div>';});
+    h+='</div></div>';
+    h+='<div class="res-cols"><div class="card"><h3>La diferencia</h3><ul><li>Son 7 puntos, menos de media desviación estándar (0,47).</li><li>Para dos personas, el error típico de la diferencia es cerca de 3 puntos, y al 95 % hacen falta unos 6. Los 7 lo superan apenas: la diferencia probablemente es real, pero es pequeña.</li><li>Si se repitiera la evaluación, no sería raro ver 130 y 132.</li></ul></div>';
+    h+='<div class="card"><h3>Lo que tienen en común</h3><ul><li>Las dos cifras están cerca del 3 % más alto de la población o dentro de él.</li><li>En la vida diaria no hay una diferencia que se note entre 128 y 135. Pesa más el perfil de índices de cada uno que estos 7 puntos.</li><li>Solo se pueden comparar si salieron del mismo test y con normas de la misma época.</li></ul></div></div>';
+    document.getElementById("ci-comparar").innerHTML=h;
+  })();
+  var tabs=[].slice.call(document.querySelectorAll('.seg [role=tab]'));
+  function selectTab(id,focus){
+    tabs.forEach(function(t){var on=t.getAttribute("aria-controls")===id;t.setAttribute("aria-selected",on);t.tabIndex=on?0:-1;document.getElementById(t.getAttribute("aria-controls")).hidden=!on;if(on&&focus)t.focus();});
+  }
+  tabs.forEach(function(t,i){
+    t.addEventListener("click",function(){var id=t.getAttribute("aria-controls");selectTab(id);try{history.replaceState(null,"","#"+id);}catch(e){}});
+    t.addEventListener("keydown",function(e){var j=e.key==="ArrowRight"?i+1:e.key==="ArrowLeft"?i-1:null;if(j===null)return;e.preventDefault();var n=tabs[(j+tabs.length)%tabs.length];n.click();n.focus();});
+  });
+  function fromHash(){var h=location.hash.slice(1);if(/^ci-(128|135|comparar)$/.test(h)){selectTab(h);document.getElementById("resultados").scrollIntoView();}}
+  window.addEventListener("hashchange",fromHash);fromHash();
 
   // ---- reveal ----
   var rvs=document.querySelectorAll(".rv");
